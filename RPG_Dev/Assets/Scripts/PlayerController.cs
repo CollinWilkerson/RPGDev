@@ -71,17 +71,16 @@ public class PlayerController : MonoBehaviourPun
 
         if(mouseX < 0)
         {
-            weaponAnim.transform.parent.localScale = new Vector3(-1, 1, 1);
+            weaponAnim.transform.parent.localScale = new Vector3(1, 1, 1);
         }
         else
         {
-            weaponAnim.transform.parent.localScale = new Vector3(1, 1, 1);
+            weaponAnim.transform.parent.localScale = new Vector3(-1, 1, 1);
         }
 
         Move();
 
-        //my mouse is only rated for so many clicks
-        if(Input.GetMouseButton(0) && Time.time - lastAttackTime > attackRate)
+        if(Input.GetMouseButtonDown(0) && Time.time - lastAttackTime > attackRate)
         {
             Attack();
         }
