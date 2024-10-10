@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using System;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -31,6 +30,27 @@ public class PlayerController : MonoBehaviourPun
 
     //local player
     public static PlayerController me;
+
+    [PunRPC]
+    public void Initialize(Player player)
+    {
+        //this allows up to referance this instance of this script to photon
+        id = player.ActorNumber;
+        photonPlayer = player;
+
+        GameManager.instance.players[id - 1] = this;
+
+        //ui
+
+        if (player.IsLocal)
+        {
+            me = this;
+        }
+        else
+        {
+            rig.isKinematic = true;
+        }
+    }
 
     private void Awake()
     {
@@ -94,5 +114,68 @@ public class PlayerController : MonoBehaviourPun
 
         //setting velocity
         rig.velocity = new Vector2(x, y) * moveSpeed;
+    }
+
+    [PunRPC]
+    public void TakeDamage()
+    {
+        curHp -= damage;
+
+        if(curHp <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            StartCoroutine(DamageFlash());
+
+            //save this tidbit for later
+            IEnumerator DamageFlash()
+            {
+                sr.color = Color.red;
+                yield return new WaitForSeconds(0.05f);
+                sr.color = Color.white;
+            }
+        }
+    }
+
+    private void Die()
+    {
+        dead = true;
+        rig.isKinematic = true;
+        sr.color = Color.clear;
+
+        Vector3 spawnPos = GameManager.instance.spawnPoints[Random.Range(0, GameManager.instance.spawnPoints.Length)].position;
+
+        StartCoroutine(Spawn(spawnPos, GameManager.instance.respawnTime));
+    }
+
+    private IEnumerator Spawn(Vector3 spawnPos, float timeToRespawn)
+    {
+        yield return new WaitForSeconds(timeToRespawn);
+
+        dead = false;
+        transform.position = spawnPos;
+        curHp = maxHp;
+        sr.color = Color.white;
+        rig.isKinematic = false;
+
+        //ui
+    }
+
+    [PunRPC]
+    private void Heal(int healAmount)
+    {
+        curHp = Mathf.Clamp(curHp + healAmount, 0, maxHp);
+
+        //ui
+    }
+
+    [PunRPC]
+    private void GiveGold (int goldGained)
+    {
+        gold += goldGained;
+
+        //ui
     }
 }
