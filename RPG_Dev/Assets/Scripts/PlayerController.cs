@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviourPun
     public Player photonPlayer;
     public SpriteRenderer sr;
     public Animator weaponAnim;
+    public HeaderInfo headerInfo;
 
     //local player
     public static PlayerController me;
@@ -40,7 +41,7 @@ public class PlayerController : MonoBehaviourPun
 
         GameManager.instance.players[id - 1] = this;
 
-        //ui
+        headerInfo.Initialize(player.NickName, maxHp);
 
         if (player.IsLocal)
         {
@@ -126,6 +127,9 @@ public class PlayerController : MonoBehaviourPun
         }
         else
         {
+
+            headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, curHp);
+
             StartCoroutine(DamageFlash());
 
             //save this tidbit for later
@@ -167,7 +171,7 @@ public class PlayerController : MonoBehaviourPun
     {
         curHp = Mathf.Clamp(curHp + healAmount, 0, maxHp);
 
-        //ui
+        headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, curHp);
     }
 
     [PunRPC]
