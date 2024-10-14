@@ -100,7 +100,8 @@ public class PlayerController : MonoBehaviourPun
         //if enemy hit
         if(hit.collider != null && hit.collider.gameObject.CompareTag("Enemy"))
         {
-            //TODO: damage enemy
+            Enemy enemy = hit.collider.GetComponent<Enemy>();
+            enemy.photonView.RPC("TakeDamage", RpcTarget.MasterClient, damage);
         }
 
         weaponAnim.SetTrigger("Attack");
@@ -117,9 +118,9 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void TakeDamage()
+    public void TakeDamage(int damageTaken)
     {
-        curHp -= damage;
+        curHp -= damageTaken;
 
         if(curHp <= 0)
         {
@@ -147,6 +148,8 @@ public class PlayerController : MonoBehaviourPun
         dead = true;
         rig.isKinematic = true;
         sr.color = Color.clear;
+        transform.position = new Vector3(0, 99, 0);
+
 
         Vector3 spawnPos = GameManager.instance.spawnPoints[Random.Range(0, GameManager.instance.spawnPoints.Length)].position;
 
@@ -163,7 +166,7 @@ public class PlayerController : MonoBehaviourPun
         sr.color = Color.white;
         rig.isKinematic = false;
 
-        //ui
+        headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, curHp);
     }
 
     [PunRPC]

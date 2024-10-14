@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 130337397587027432}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.34, y: 2.98, z: 5.904883}
+  m_LocalPosition: {x: -4.34, y: 2.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -173,11 +173,11 @@ MonoBehaviour:
   curHp: 10
   maxHp: 10
   chaseRange: 5
-  attackRange: 0.5
+  attackRange: 1
   playerDetectRate: 0.2
-  objectToSpawnOnDeath: 
-  damage: 0
-  attackRate: 0
+  objectToSpawnOnDeath: GoldPickup
+  damage: 10
+  attackRate: 0.05
   healthBar: {fileID: 6616562060604637191}
   sr: {fileID: 0}
   rig: {fileID: 0}

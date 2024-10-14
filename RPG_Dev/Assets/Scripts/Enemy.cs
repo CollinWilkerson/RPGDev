@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
-using System;
 
 public class Enemy : MonoBehaviourPun
 {
@@ -69,13 +68,14 @@ public class Enemy : MonoBehaviourPun
             {
                 rig.velocity = Vector2.zero;
             }
-
-            DetectPlayer();
         }
+
+        DetectPlayer();
     }
 
     private void Attack()
     {
+        Debug.Log("EnemyAttack");
         lastAttackTime = Time.time;
         targetPlayer.photonView.RPC("TakeDamage", targetPlayer.photonPlayer, damage);
     }
@@ -94,12 +94,12 @@ public class Enemy : MonoBehaviourPun
                     {
                         targetPlayer = null;
                     }
-                    else if(dist < chaseRange)
+                }
+                else if (dist < chaseRange)
+                {
+                    if (targetPlayer == null)
                     {
-                        if(targetPlayer == null)
-                        {
-                            targetPlayer = player;
-                        }
+                        targetPlayer = player;
                     }
                 }
             }
@@ -133,6 +133,7 @@ public class Enemy : MonoBehaviourPun
         PhotonNetwork.Destroy(gameObject);
     }
 
+    [PunRPC]
     void FlashDamage()
     {
         StartCoroutine(DamageFlash());

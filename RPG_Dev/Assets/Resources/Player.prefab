@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 443394698022485924}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.6564, y: 4.780057, z: 0.18589115}
+  m_LocalPosition: {x: -9.6564, y: 4.780057, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -175,7 +175,7 @@ MonoBehaviour:
   curHp: 100
   maxHp: 100
   dead: 0
-  damage: 10
+  damage: 3
   attackRange: 1
   attackRate: 0.2
   rig: {fileID: 0}
